@@ -22,7 +22,7 @@ public class Movie {
     private String title;
     private String releaseData;
     private String trailerLink;
-    private String posterLink;
+    private String poster;
     private List<String> genres;
     private List<String> backdrops;
 
@@ -49,8 +49,8 @@ public class Movie {
         return trailerLink;
     }
 
-    public String getPosterLink() {
-        return posterLink;
+    public String getPoster() {
+        return poster;
     }
 
     public List<String> getGenres() {
