@@ -1,5 +1,7 @@
 package dev.abdelrahman.movies.Models.Review;
 
+import org.bson.types.ObjectId;
+
 import jakarta.validation.constraints.NotBlank;
 
 import lombok.Getter;
@@ -10,11 +12,11 @@ public class CreateReviewDTO {
     private String reviewBody;
 
     @NotBlank(message = "imdbId must not be blank")
-    private String imdbId;
+    private ObjectId id;
 
 
-    public CreateReviewDTO(String reviewBody, String imdbId) {
+    public CreateReviewDTO(String reviewBody, ObjectId id) {
         this.reviewBody = reviewBody;
-        this.imdbId = imdbId;
+        this.id = id;
     }
 }

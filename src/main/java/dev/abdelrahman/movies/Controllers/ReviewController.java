@@ -54,7 +54,7 @@ public class ReviewController {
 
    @PutMapping("/delete/{id}")
     public ResponseEntity<Review> smootheDeleteReview(@PathVariable ObjectId id) {
-        return new ResponseEntity<Review>(reviewService.smootheDeleteReview(id), HttpStatus.GONE);
+        return new ResponseEntity<Review>(reviewService.smootheDeleteReview(id), HttpStatus.OK);
     } 
 
     @PutMapping("/active/{id}")

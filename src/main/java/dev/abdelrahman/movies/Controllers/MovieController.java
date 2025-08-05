@@ -49,7 +49,7 @@ public class MovieController {
 
     @PutMapping("/delete/{id}")
     public ResponseEntity<Movie> smootheDeleteMovie(@PathVariable ObjectId id) {
-        return new ResponseEntity<Movie>(movieService.smootheDeleteMovie(id), HttpStatus.GONE);
+        return new ResponseEntity<Movie>(movieService.smootheDeleteMovie(id), HttpStatus.OK);
     } 
 
     @PutMapping("/active/{id}")

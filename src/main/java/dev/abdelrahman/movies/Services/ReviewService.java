@@ -41,7 +41,7 @@ public class ReviewService {
     }
 
     public Review createReview(CreateReviewDTO createReviewDTO) {
-        Movie movie = movieRepository.findMovieByImdbId(createReviewDTO.getImdbId())
+        Movie movie = movieRepository.findById(createReviewDTO.getId())
             .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id "));
 
         
