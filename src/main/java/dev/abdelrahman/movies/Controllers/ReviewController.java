@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,11 @@ public class ReviewController {
         return new ResponseEntity<List<Review>>(reviewService.allReviews(), HttpStatus.OK);
     }
 
+    @GetMapping("/valid")
+    public ResponseEntity<List<Review>> getAllValidReviews() {
+        return new ResponseEntity<List<Review>>(reviewService.allValidReviews(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Review>> getReviewById(@PathVariable ObjectId id) {
         return new ResponseEntity<Optional<Review>>(reviewService.getReviewById(id), HttpStatus.OK);
@@ -45,4 +51,19 @@ public class ReviewController {
     public ResponseEntity<Review> updateReview(@Valid @RequestBody UpdateReviewDTO updateReviewDTO, @PathVariable ObjectId id) {
         return new ResponseEntity<Review>(reviewService.updateReview(updateReviewDTO, id), HttpStatus.OK);
     }
+
+   @PutMapping("/delete/{id}")
+    public ResponseEntity<Review> smootheDeleteReview(@PathVariable ObjectId id) {
+        return new ResponseEntity<Review>(reviewService.smootheDeleteReview(id), HttpStatus.GONE);
+    } 
+
+    @PutMapping("/active/{id}")
+    public ResponseEntity<Review> activeReview(@PathVariable ObjectId id) {
+        return new ResponseEntity<Review>(reviewService.activeReview(id), HttpStatus.OK);
+    } 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Review> DeleteReview(@PathVariable ObjectId id) {
+        return new ResponseEntity<Review>(reviewService.deleteReview(id), HttpStatus.OK);
+    } 
 }

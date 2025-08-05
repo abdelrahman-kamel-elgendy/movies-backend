@@ -15,11 +15,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "reviews")
 public class Review {
-    public Review(String body) {
+    public Review(String body, boolean isActive) {
         this.body = body;
+        this.isActive = isActive;
     }
 
     @Id
     private String id;
     private String body;
+    private boolean isActive;
 }
