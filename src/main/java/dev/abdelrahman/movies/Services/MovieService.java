@@ -1,8 +1,10 @@
 package dev.abdelrahman.movies.Services;
 
-import dev.abdelrahman.movies.Models.Movie;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+
+import dev.abdelrahman.movies.Models.Movie.CreateMovieDTO;
+import dev.abdelrahman.movies.Models.Movie.Movie;
 import dev.abdelrahman.movies.Repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,5 +26,9 @@ public class MovieService {
 
     public Optional<Movie> singleMovieByImdbId(String imdbId) {
         return movieRepository.findMovieByImdbId(imdbId);
+    }
+
+    public Movie createMovie(CreateMovieDTO createMovieDTO) {
+        return movieRepository.insert(new Movie());
     }
 }
