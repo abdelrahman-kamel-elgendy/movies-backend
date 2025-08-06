@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.abdelrahman.movies.Models.User.User;
+import dev.abdelrahman.movies.Models.User.DTOs.RetrieveUserDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SigninDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
 import dev.abdelrahman.movies.Services.AuthService;
@@ -50,7 +51,7 @@ public class authController {
                 .badRequest()
                 .body(new MessageResponse("Error: Password confirmation does not match!"));
         
-        return new ResponseEntity<User>(authService.createUser(signupDTO), HttpStatus.CREATED);
+        return new ResponseEntity<RetrieveUserDTO>(authService.createUser(signupDTO), HttpStatus.CREATED);
     }
 
 }

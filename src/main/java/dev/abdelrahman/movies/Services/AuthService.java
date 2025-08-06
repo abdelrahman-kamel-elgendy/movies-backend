@@ -1,15 +1,14 @@
 package dev.abdelrahman.movies.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dev.abdelrahman.movies.Models.User.Role;
 import dev.abdelrahman.movies.Models.User.User;
+import dev.abdelrahman.movies.Models.User.DTOs.RetrieveUserDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
 import dev.abdelrahman.movies.Repositories.UserRepository;
-import dev.abdelrahman.movies.Utils.MessageResponse;
 
 @Service
 public class AuthService {
@@ -27,7 +26,7 @@ public class AuthService {
         return userRepository.existsByEmail(userEmail);
     }
 
-    public User createUser(SignupDTO signupDTO) {
+    public RetrieveUserDTO createUser(SignupDTO signupDTO) {
         User user = new User();
         user.setUsername(signupDTO.getUsername());
         user.setEmail(signupDTO.getEmail());
@@ -35,6 +34,6 @@ public class AuthService {
         user.setRole(Role.USER);
 
         userRepository.save(user);
-        return user;
+        return new RetrieveUserDTO(user.getUsername(), user.getEmail());
     } 
 }
