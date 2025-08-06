@@ -1,6 +1,5 @@
 package dev.abdelrahman.movies.Services;
 
-import dev.abdelrahman.movies.Controllers.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.Movie.Movie;
 import dev.abdelrahman.movies.Models.Review.Review;
 import dev.abdelrahman.movies.Models.Review.DTOs.CreateReviewDTO;
@@ -8,6 +7,7 @@ import dev.abdelrahman.movies.Models.Review.DTOs.RetrieveReviewDTO;
 import dev.abdelrahman.movies.Models.Review.DTOs.UpdateReviewDTO;
 import dev.abdelrahman.movies.Repositories.MovieRepository;
 import dev.abdelrahman.movies.Repositories.ReviewRepository;
+import dev.abdelrahman.movies.Utils.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;

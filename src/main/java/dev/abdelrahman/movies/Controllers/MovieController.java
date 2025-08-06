@@ -29,12 +29,12 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Movie>> getAllMovies() {
         return new ResponseEntity<List<Movie>>(movieService.allMovies(), HttpStatus.OK);
     }
 
-    @GetMapping("/valid")
+    @GetMapping
     public ResponseEntity<List<Movie>> getAllVaidMovies() {
         return new ResponseEntity<List<Movie>>(movieService.allValidMovies(), HttpStatus.OK);
     }

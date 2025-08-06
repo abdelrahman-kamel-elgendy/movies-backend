@@ -3,12 +3,13 @@ package dev.abdelrahman.movies.Services;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
-import dev.abdelrahman.movies.Controllers.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.Movie.Movie;
 import dev.abdelrahman.movies.Models.Movie.DTOs.CreateMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.DTOs.RetrieveMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.DTOs.UpdateMovieDTO;
 import dev.abdelrahman.movies.Repositories.MovieRepository;
+import dev.abdelrahman.movies.Utils.ResourceNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

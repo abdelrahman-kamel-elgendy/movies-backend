@@ -28,12 +28,12 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Review>> getAllReviews() {
         return new ResponseEntity<List<Review>>(reviewService.allReviews(), HttpStatus.OK);
     }
 
-    @GetMapping("/valid")
+    @GetMapping()
     public ResponseEntity<List<Review>> getAllValidReviews() {
         return new ResponseEntity<List<Review>>(reviewService.allValidReviews(), HttpStatus.OK);
     }
