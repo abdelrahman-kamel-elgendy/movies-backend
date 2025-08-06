@@ -1,8 +1,9 @@
 package dev.abdelrahman.movies.Controllers;
 
-import dev.abdelrahman.movies.Models.Review.CreateReviewDTO;
 import dev.abdelrahman.movies.Models.Review.Review;
-import dev.abdelrahman.movies.Models.Review.UpdateReviewDTO;
+import dev.abdelrahman.movies.Models.Review.DTOs.CreateReviewDTO;
+import dev.abdelrahman.movies.Models.Review.DTOs.RetrieveReviewDTO;
+import dev.abdelrahman.movies.Models.Review.DTOs.UpdateReviewDTO;
 import dev.abdelrahman.movies.Services.ReviewService;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
@@ -43,13 +44,13 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@Valid @RequestBody CreateReviewDTO createReviewDTO) {
-        return new ResponseEntity<Review>(reviewService.createReview(createReviewDTO), HttpStatus.CREATED);
+    public ResponseEntity<RetrieveReviewDTO> createReview(@Valid @RequestBody CreateReviewDTO createReviewDTO) {
+        return new ResponseEntity<RetrieveReviewDTO>(reviewService.createReview(createReviewDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Review> updateReview(@Valid @RequestBody UpdateReviewDTO updateReviewDTO, @PathVariable ObjectId id) {
-        return new ResponseEntity<Review>(reviewService.updateReview(updateReviewDTO, id), HttpStatus.OK);
+    public ResponseEntity<RetrieveReviewDTO> updateReview(@Valid @RequestBody UpdateReviewDTO updateReviewDTO, @PathVariable ObjectId id) {
+        return new ResponseEntity<RetrieveReviewDTO>(reviewService.updateReview(updateReviewDTO, id), HttpStatus.OK);
     }
 
    @PutMapping("/delete/{id}")

@@ -1,7 +1,9 @@
 package dev.abdelrahman.movies.Controllers;
 
-import dev.abdelrahman.movies.Models.Movie.CreateMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.Movie;
+import dev.abdelrahman.movies.Models.Movie.DTOs.CreateMovieDTO;
+import dev.abdelrahman.movies.Models.Movie.DTOs.RetrieveMovieDTO;
+import dev.abdelrahman.movies.Models.Movie.DTOs.UpdateMovieDTO;
 import dev.abdelrahman.movies.Services.MovieService;
 import jakarta.validation.Valid;
 
@@ -43,8 +45,13 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@Valid @RequestBody CreateMovieDTO createMovieDTO) {
-        return new ResponseEntity<Movie>(movieService.createMovie(createMovieDTO), HttpStatus.CREATED);
+    public ResponseEntity<RetrieveMovieDTO> createMovie(@Valid @RequestBody CreateMovieDTO createMovieDTO) {
+        return new ResponseEntity<RetrieveMovieDTO>(movieService.createMovie(createMovieDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RetrieveMovieDTO> updateMovie(@Valid @RequestBody UpdateMovieDTO updateMovieDTO, @PathVariable ObjectId id) {
+        return new ResponseEntity<RetrieveMovieDTO>(movieService.updateMovie(updateMovieDTO, id), HttpStatus.OK);
     }
 
     @PutMapping("/delete/{id}")

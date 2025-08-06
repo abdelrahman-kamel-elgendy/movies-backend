@@ -1,4 +1,4 @@
-package dev.abdelrahman.movies.Models.Review;
+package dev.abdelrahman.movies.Models.Review.DTOs;
 
 import org.bson.types.ObjectId;
 
@@ -11,11 +11,11 @@ public class CreateReviewDTO {
     @NotBlank(message = "Review body must not be blank")
     private String reviewBody;
 
-    @NotBlank(message = "imdbId must not be blank")
-    private ObjectId id;
+    @NotBlank(message = "Id must not be blank")
+    private String id;
 
 
-    public CreateReviewDTO(String reviewBody, ObjectId id) {
+    public CreateReviewDTO(String reviewBody, String id) {
         this.reviewBody = reviewBody;
         this.id = id;
     }

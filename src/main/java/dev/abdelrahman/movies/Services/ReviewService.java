@@ -2,9 +2,10 @@ package dev.abdelrahman.movies.Services;
 
 import dev.abdelrahman.movies.Controllers.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.Movie.Movie;
-import dev.abdelrahman.movies.Models.Review.CreateReviewDTO;
 import dev.abdelrahman.movies.Models.Review.Review;
-import dev.abdelrahman.movies.Models.Review.UpdateReviewDTO;
+import dev.abdelrahman.movies.Models.Review.DTOs.CreateReviewDTO;
+import dev.abdelrahman.movies.Models.Review.DTOs.RetrieveReviewDTO;
+import dev.abdelrahman.movies.Models.Review.DTOs.UpdateReviewDTO;
 import dev.abdelrahman.movies.Repositories.MovieRepository;
 import dev.abdelrahman.movies.Repositories.ReviewRepository;
 
@@ -40,25 +41,27 @@ public class ReviewService {
         return reviewRepository.findById(id);
     }
 
-    public Review createReview(CreateReviewDTO createReviewDTO) {
-        Movie movie = movieRepository.findById(createReviewDTO.getId())
-            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id "));
+    public RetrieveReviewDTO createReview(CreateReviewDTO createReviewDTO) {
+        String id = createReviewDTO.getId();
+        Movie movie = movieRepository.findById(new ObjectId(id))
+            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
 
         
         Review review = reviewRepository.insert(new Review(createReviewDTO.getReviewBody(), true));
+
         movie.getReviewIds().add(review);
         movieRepository.save(movie);
-
-        return review;
+        
+        return new RetrieveReviewDTO(review.getId(), review.getBody());
     }
 
-    public Review updateReview(UpdateReviewDTO updateReviewDTO, ObjectId id) {
+    public RetrieveReviewDTO updateReview(UpdateReviewDTO updateReviewDTO, ObjectId id) {
         Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id "));
+            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
             
         review.setBody(updateReviewDTO.getReviewBody());
         reviewRepository.save(review);
-        return review;
+        return new RetrieveReviewDTO(review.getId(), review.getBody());
     }
 
     public Review smootheDeleteReview(ObjectId id) {
@@ -72,7 +75,7 @@ public class ReviewService {
 
     public Review activeReview(ObjectId id) {
          Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id "));
+            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
             
         review.setActive(true);
         reviewRepository.save(review);
@@ -81,7 +84,7 @@ public class ReviewService {
 
     public Review deleteReview(ObjectId id) {
          Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id "));
+            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
             
         reviewRepository.deleteById(id);
         return review;

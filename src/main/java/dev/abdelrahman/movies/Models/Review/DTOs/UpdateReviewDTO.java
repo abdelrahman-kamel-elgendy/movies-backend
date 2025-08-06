@@ -1,4 +1,4 @@
-package dev.abdelrahman.movies.Models.Review;
+package dev.abdelrahman.movies.Models.Review.DTOs;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

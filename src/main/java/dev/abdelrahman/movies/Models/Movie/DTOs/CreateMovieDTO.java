@@ -1,4 +1,4 @@
-package dev.abdelrahman.movies.Models.Movie;
+package dev.abdelrahman.movies.Models.Movie.DTOs;
 
 import java.util.List;
 
