@@ -31,41 +31,49 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Movie>> getAllMovies() {
         return new ResponseEntity<List<Movie>>(movieService.allMovies(), HttpStatus.OK);
     }
     
-    @GetMapping// Only USER role can access
+    @GetMapping//
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<List<Movie>> getAllVaidMovies() {
         return new ResponseEntity<List<Movie>>(movieService.allValidMovies(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Optional<Movie>> getMovie(@PathVariable ObjectId id) {
         return new ResponseEntity<Optional<Movie>>(movieService.singleMovie(id), HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RetrieveMovieDTO> createMovie(@Valid @RequestBody CreateMovieDTO createMovieDTO) {
         return new ResponseEntity<RetrieveMovieDTO>(movieService.createMovie(createMovieDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RetrieveMovieDTO> updateMovie(@Valid @RequestBody UpdateMovieDTO updateMovieDTO, @PathVariable ObjectId id) {
         return new ResponseEntity<RetrieveMovieDTO>(movieService.updateMovie(updateMovieDTO, id), HttpStatus.OK);
     }
 
     @PutMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Movie> smootheDeleteMovie(@PathVariable ObjectId id) {
         return new ResponseEntity<Movie>(movieService.smootheDeleteMovie(id), HttpStatus.OK);
     } 
 
     @PutMapping("/active/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Movie> activeMovie(@PathVariable ObjectId id) {
         return new ResponseEntity<Movie>(movieService.activeMovie(id), HttpStatus.OK);
     } 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Movie> DeleteMovie(@PathVariable ObjectId id) {
         return new ResponseEntity<Movie>(movieService.deleteMovie(id), HttpStatus.OK);
     } 
