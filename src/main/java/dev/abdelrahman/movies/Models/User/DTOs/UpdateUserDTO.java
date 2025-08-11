@@ -1,12 +1,13 @@
 package dev.abdelrahman.movies.Models.User.DTOs;
 
-import lombok.AllArgsConstructor;
+import javax.management.relation.Role;
+
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
-public class RetrieveUserDTO {
+public class UpdateUserDTO {
     private String username;
     private String email;
-    private String role;
+    private String password;
+    private Role role;
 }

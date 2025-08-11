@@ -1,5 +1,6 @@
 package dev.abdelrahman.movies.Services;
 
+import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.Movie.Movie;
 import dev.abdelrahman.movies.Models.Review.Review;
 import dev.abdelrahman.movies.Models.Review.DTOs.CreateReviewDTO;
@@ -7,10 +8,8 @@ import dev.abdelrahman.movies.Models.Review.DTOs.RetrieveReviewDTO;
 import dev.abdelrahman.movies.Models.Review.DTOs.UpdateReviewDTO;
 import dev.abdelrahman.movies.Repositories.MovieRepository;
 import dev.abdelrahman.movies.Repositories.ReviewRepository;
-import dev.abdelrahman.movies.Utils.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,33 +19,35 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReviewService {
+public class ReviewService implements CrudService<Review, RetrieveReviewDTO, CreateReviewDTO, UpdateReviewDTO>{
     @Autowired
     private ReviewRepository reviewRepository;
+    @Autowired
+    private MovieService movieService;
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
 
-    public List<Review> allReviews() {
+    public List<Review> all() {
         return reviewRepository.findAll();
     }
 
-    public List<Review> allValidReviews() {
+    public List<Review> allValid() {
         return mongoTemplate.find(new Query(Criteria.where("isActive").is(true)), Review.class);
     }
 
-    public Optional<Review> getReviewById(ObjectId id) {
-        return reviewRepository.findById(id);
+    public Review findById(ObjectId id) {
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
+
+        return review;
     }
 
-    public RetrieveReviewDTO createReview(CreateReviewDTO createReviewDTO) {
-        String id = createReviewDTO.getId();
-        Movie movie = movieRepository.findById(new ObjectId(id))
-            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+    public RetrieveReviewDTO create(CreateReviewDTO createReviewDTO) {
+        Movie movie = movieService.findById(createReviewDTO.getId());
 
-        
         Review review = reviewRepository.insert(new Review(createReviewDTO.getReviewBody(), true));
 
         movie.getReviewIds().add(review);
@@ -55,36 +56,32 @@ public class ReviewService {
         return new RetrieveReviewDTO(review.getId(), review.getBody());
     }
 
-    public RetrieveReviewDTO updateReview(UpdateReviewDTO updateReviewDTO, ObjectId id) {
-        Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
+    public RetrieveReviewDTO update(UpdateReviewDTO updateReviewDTO, ObjectId id) {
+        Review review = this.findById(id);
             
         review.setBody(updateReviewDTO.getReviewBody());
         reviewRepository.save(review);
         return new RetrieveReviewDTO(review.getId(), review.getBody());
     }
 
-    public Review smootheDeleteReview(ObjectId id) {
-         Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id "));
+    public Review smootheDelete(ObjectId id) {
+         Review review = this.findById(id);
             
         review.setActive(false);;
         reviewRepository.save(review);
         return review;
     }
 
-    public Review activeReview(ObjectId id) {
-         Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
+    public Review active(ObjectId id) {
+         Review review = this.active(id);
             
         review.setActive(true);
         reviewRepository.save(review);
         return review;
     }
 
-    public Review deleteReview(ObjectId id) {
-         Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
+    public Review delete(ObjectId id) {
+         Review review = this.delete(id);
             
         reviewRepository.deleteById(id);
         return review;

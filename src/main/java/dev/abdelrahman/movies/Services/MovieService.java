@@ -3,68 +3,67 @@ package dev.abdelrahman.movies.Services;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.Movie.Movie;
 import dev.abdelrahman.movies.Models.Movie.DTOs.CreateMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.DTOs.RetrieveMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.DTOs.UpdateMovieDTO;
 import dev.abdelrahman.movies.Repositories.MovieRepository;
-import dev.abdelrahman.movies.Utils.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.mongodb.core.query.Query;
 
 @Service
-public class MovieService {
+public class MovieService implements CrudService<Movie, RetrieveMovieDTO, CreateMovieDTO, UpdateMovieDTO>{
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public List<Movie> allMovies() {
+    public List<Movie> all() {
         return movieRepository.findAll();
     }
-
-    public List<Movie> allValidMovies() {
+    
+    public List<Movie> allValid() {
         return mongoTemplate.find(new Query(Criteria.where("isActive").is(true)), Movie.class);
     }
 
-    public Optional<Movie> singleMovie(ObjectId id) {
-        return movieRepository.findById(id);
+    public Movie findById(ObjectId id) {
+         Movie movie = movieRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+
+        return movie;
     }
     
-    public Movie smootheDeleteMovie(ObjectId id) {
-         Movie Movie = movieRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+    public Movie smootheDelete(ObjectId id) {
+        Movie movie = this.findById(id);
             
-        Movie.setActive(false);;
-        movieRepository.save(Movie);
-        return Movie;
+        movie.setActive(false);;
+        movieRepository.save(movie);
+        return movie;
     }
 
-    public Movie activeMovie(ObjectId id) {
-         Movie Movie = movieRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
-            
-        Movie.setActive(true);
-        movieRepository.save(Movie);
-        return Movie;
+    public Movie active(ObjectId id) {
+        Movie movie = this.findById(id);
+
+        movie.setActive(true);
+        movieRepository.save(movie);
+        return movie;
     }
 
-    public Movie deleteMovie(ObjectId id) {
-         Movie Movie = movieRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
-            
+    public Movie delete(ObjectId id) {
+        Movie movie = this.findById(id);
+
         movieRepository.deleteById(id);
-        return Movie;
+        return movie;
     }
 
-    public RetrieveMovieDTO createMovie(CreateMovieDTO createMovieDTO) {
+    public RetrieveMovieDTO create(CreateMovieDTO createMovieDTO) {
         Movie movie = new Movie();
         movie.setTitle(createMovieDTO.getTitle());
         movie.setReleaseData(createMovieDTO.getReleaseData());
@@ -72,14 +71,15 @@ public class MovieService {
         movie.setActive(true);
         movie.setGenres(createMovieDTO.getGenres());
         movie.setBackdrops(createMovieDTO.getBackdrops());
+        
         movie = movieRepository.save(movie); 
         return new RetrieveMovieDTO(movie.getId(), movie.getTitle(), movie.getReleaseData(), movie.getTrailerLink(), movie.getPoster(), movie.getGenres(), movie.getBackdrops());
     }
 
-    public RetrieveMovieDTO updateMovie(UpdateMovieDTO updateMovieDTO, ObjectId id) {
-        Movie movie = movieRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
-            
+    public RetrieveMovieDTO update(UpdateMovieDTO updateMovieDTO, ObjectId id) {
+        Movie movie = this.findById(id);
+
+
         if (updateMovieDTO.getTitle() != null) 
             movie.setTitle(updateMovieDTO.getTitle());
         if (updateMovieDTO.getReleaseData() != null) 

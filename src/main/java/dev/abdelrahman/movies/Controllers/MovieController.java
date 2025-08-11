@@ -1,80 +1,16 @@
 package dev.abdelrahman.movies.Controllers;
 
+import dev.abdelrahman.movies.Controllers.Crud.CrudController;
 import dev.abdelrahman.movies.Models.Movie.Movie;
 import dev.abdelrahman.movies.Models.Movie.DTOs.CreateMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.DTOs.RetrieveMovieDTO;
 import dev.abdelrahman.movies.Models.Movie.DTOs.UpdateMovieDTO;
 import dev.abdelrahman.movies.Services.MovieService;
-import jakarta.validation.Valid;
 
-import org.bson.types.ObjectId;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/movies")
-public class MovieController {
-    @Autowired
-    private MovieService movieService;
-
-    @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return new ResponseEntity<List<Movie>>(movieService.allMovies(), HttpStatus.OK);
-    }
+public class MovieController extends CrudController<MovieService, Movie, RetrieveMovieDTO, CreateMovieDTO, UpdateMovieDTO> {
     
-    @GetMapping//
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<List<Movie>> getAllVaidMovies() {
-        return new ResponseEntity<List<Movie>>(movieService.allValidMovies(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Optional<Movie>> getMovie(@PathVariable ObjectId id) {
-        return new ResponseEntity<Optional<Movie>>(movieService.singleMovie(id), HttpStatus.OK);
-    }
-
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RetrieveMovieDTO> createMovie(@Valid @RequestBody CreateMovieDTO createMovieDTO) {
-        return new ResponseEntity<RetrieveMovieDTO>(movieService.createMovie(createMovieDTO), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RetrieveMovieDTO> updateMovie(@Valid @RequestBody UpdateMovieDTO updateMovieDTO, @PathVariable ObjectId id) {
-        return new ResponseEntity<RetrieveMovieDTO>(movieService.updateMovie(updateMovieDTO, id), HttpStatus.OK);
-    }
-
-    @PutMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Movie> smootheDeleteMovie(@PathVariable ObjectId id) {
-        return new ResponseEntity<Movie>(movieService.smootheDeleteMovie(id), HttpStatus.OK);
-    } 
-
-    @PutMapping("/active/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Movie> activeMovie(@PathVariable ObjectId id) {
-        return new ResponseEntity<Movie>(movieService.activeMovie(id), HttpStatus.OK);
-    } 
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Movie> DeleteMovie(@PathVariable ObjectId id) {
-        return new ResponseEntity<Movie>(movieService.deleteMovie(id), HttpStatus.OK);
-    } 
 }
