@@ -17,6 +17,8 @@ import dev.abdelrahman.movies.Models.User.DTOs.SigninDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
 import dev.abdelrahman.movies.Repositories.UserRepository;
 import dev.abdelrahman.movies.Config.Security.JwtUtils;
+import dev.abdelrahman.movies.Controllers.Exceptions.BadRequestException;
+import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
 
 @Service
 public class AuthService {
@@ -42,6 +44,15 @@ public class AuthService {
     }
 
     public RetrieveUserDTO createUser(SignupDTO signupDTO) {
+        if(!signupDTO.getPassword().equals( signupDTO.getPasswordConfirmation()))
+            throw new BadRequestException("Password confirmation does not match!");
+
+        if(this.existsByEmail(signupDTO.getEmail()))
+            throw new BadRequestException("Email is already exists!");
+
+        if(this.existsByUsername(signupDTO.getUsername()))
+            throw new BadRequestException("Username is already taken!");
+        
         User user = new User();
         user.setUsername(signupDTO.getUsername());
         user.setEmail(signupDTO.getEmail());
@@ -49,22 +60,21 @@ public class AuthService {
         user.setRole(Role.USER);
 
         userRepository.save(user);
-        return new RetrieveUserDTO(user.getUsername(), user.getEmail());
+        return new RetrieveUserDTO(user.getUsername(), user.getEmail(), user.getRole().toString());
     }
     
     public JwtResponseDTO authenticateUser(SigninDTO signinDTO) {
+        User user = userRepository.findByUsername(signinDTO.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signinDTO.getUsername(),
                         signinDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateToken((UserDetails) authentication.getPrincipal());
+        String jwt = jwtUtils.generateToken((UserDetails) authentication.getPrincipal());  
         
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();        
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        return new JwtResponseDTO(jwt, user.getUsername(), user.getEmail());
+        return new JwtResponseDTO(jwt, "Bearer", user.getUsername(), user.getEmail(), user.getRole().toString());
     }
 }

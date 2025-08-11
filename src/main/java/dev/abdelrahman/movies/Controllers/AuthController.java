@@ -1,17 +1,19 @@
 package dev.abdelrahman.movies.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// import dev.abdelrahman.movies.Controllers.Exceptions.MessageResponse;
+import dev.abdelrahman.movies.Controllers.Exceptions.ApiResponse;
 import dev.abdelrahman.movies.Models.User.DTOs.JwtResponseDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SigninDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
 import dev.abdelrahman.movies.Services.AuthService;
-import dev.abdelrahman.movies.Utils.MessageResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -22,34 +24,14 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody SigninDTO signinDTO) {
-        try {
-            JwtResponseDTO response = authService.authenticateUser(signinDTO);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: " + e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<JwtResponseDTO>> authenticateUser(@Valid @RequestBody SigninDTO signinDTO) {
+        JwtResponseDTO jwtResponse = authService.authenticateUser(signinDTO);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Login successful", jwtResponse));
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupDTO signupDTO) {
-        if(authService.existsByUsername(signupDTO.getUsername()))
-            return ResponseEntity
-                .badRequest()
-                .body(new MessageResponse("Error: Username is already taken!"));
-        
-        if(authService.existsByEmail(signupDTO.getEmail()))
-            return ResponseEntity
-                .badRequest()
-                .body(new MessageResponse("Error: Email is already taken!"));
-        
-        if(!signupDTO.getPassword().equals(signupDTO.getPasswordConfirmation())) 
-            return ResponseEntity
-                .badRequest()
-                .body(new MessageResponse("Error: Password confirmation does not match!"));
-        
-        return ResponseEntity.ok(authService.createUser(signupDTO));
+    public ResponseEntity<ApiResponse<?>> registerUser(@Valid @RequestBody SignupDTO signupDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "User registered successfully", authService.createUser(signupDTO)));
     }
 }
