@@ -11,6 +11,7 @@ import dev.abdelrahman.movies.Models.User.User;
 @Repository
 public interface UserRepository extends MongoRepository<User, ObjectId> {
     Optional<User> findByUsername(String username); 
+    Optional<User> findByEmail(String email); 
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 }

@@ -1,7 +1,5 @@
 package dev.abdelrahman.movies.Controllers.Crud;
 
-import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
