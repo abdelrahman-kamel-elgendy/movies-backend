@@ -40,19 +40,30 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**").permitAll()
 
-                // Movies - ADMIN only for create/update/delete
-                .requestMatchers(HttpMethod.GET, "/api/v1/movies").hasAnyRole("ADMIN", "USER")
+                // Movies
+                .requestMatchers(HttpMethod.GET, "/api/v1/movies").permitAll()
                 .requestMatchers("/api/v1/movies/**").hasRole("ADMIN")
+
+                // Users
+                .requestMatchers("/api/v1/users").hasRole("ADMIN")
                 
                 // Reviews
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/reviews").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/reviews").hasAnyRole("ADMIN", "USER")
                 .requestMatchers("/api/v1/reviews/**").hasAnyRole("ADMIN")
 
-                .anyRequest().authenticated()
+                // Swagger UI & API Docs
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**",
+                    "/swagger-resources",
+                    "/webjars/**"
+                ).permitAll()
+
+                .anyRequest().permitAll()
             )
 
             // Add JWT filter before username/password authentication
