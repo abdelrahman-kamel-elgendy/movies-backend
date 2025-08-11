@@ -1,41 +1,40 @@
 package dev.abdelrahman.movies.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.abdelrahman.movies.Models.User.User;
-import dev.abdelrahman.movies.Models.User.DTOs.RetrieveUserDTO;
+import dev.abdelrahman.movies.Models.User.DTOs.JwtResponseDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SigninDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
 import dev.abdelrahman.movies.Services.AuthService;
 import dev.abdelrahman.movies.Utils.MessageResponse;
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 @RestController
 @RequestMapping("/api/v1/auth")
-public class authController {
+public class AuthController {
 
     @Autowired
     private AuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@Valid @RequestBody SigninDTO signinDTO) {
-        
-        return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody SigninDTO signinDTO) {
+        try {
+            JwtResponseDTO response = authService.authenticateUser(signinDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: " + e.getMessage()));
+        }
     }
     
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO signupDTO) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupDTO signupDTO) {
         if(authService.existsByUsername(signupDTO.getUsername()))
             return ResponseEntity
                 .badRequest()
@@ -51,7 +50,6 @@ public class authController {
                 .badRequest()
                 .body(new MessageResponse("Error: Password confirmation does not match!"));
         
-        return new ResponseEntity<RetrieveUserDTO>(authService.createUser(signupDTO), HttpStatus.CREATED);
+        return ResponseEntity.ok(authService.createUser(signupDTO));
     }
-
 }
