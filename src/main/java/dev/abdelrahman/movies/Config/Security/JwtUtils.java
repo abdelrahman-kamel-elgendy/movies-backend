@@ -28,14 +28,7 @@ public class JwtUtils {
     @Value("${app.jwt.expirationMs}")
     private long expirationTime;
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);  
-
-    // Consider making these configurable via application.properties
-    // @Value("${app.jwt.secret}")
-    // private String secretKey;
-    
-    // @Value("${app.jwt.expirationMs}")
-    // private long expirationTime;
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     public boolean validateJwtToken(String authToken) {
         try {
