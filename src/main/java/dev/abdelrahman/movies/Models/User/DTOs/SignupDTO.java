@@ -9,10 +9,10 @@ import lombok.Getter;
 @Getter
 public class SignupDTO {
 
-     @NotBlank(message = "Firs name must not be Blank")
+    @NotBlank(message = "Firs name must not be Blank")
      private String fitstName;
 
-     @NotBlank(message = "Last name must not be Blank")
+    @NotBlank(message = "Last name must not be Blank")
     private String lastName;
     
     private String Phone;

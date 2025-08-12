@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import dev.abdelrahman.movies.Controllers.Exceptions.BadRequestException;
 import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
+import dev.abdelrahman.movies.Models.User.Role;
 import dev.abdelrahman.movies.Models.User.User;
 import dev.abdelrahman.movies.Models.User.DTOs.CreateUserDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.RetrieveUserDTO;
@@ -84,29 +85,34 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
     }
 
     public RetrieveUserDTO create(CreateUserDTO createUserDTO) {
-        if(!this.findUserByEmail(createUserDTO.getEmail()).equals(null))
+        Role role = Role.USER;
+        if(userRepository.existsByEmail(createUserDTO.getEmail()))
             throw new BadRequestException("Email alrady exists!");
 
-        if(!this.findUserByUsername(createUserDTO.getUsername()).equals(null))
+        if(userRepository.existsByUsername(createUserDTO.getUsername()))
             throw new BadRequestException("Username alrady taken!");
+
+        if(createUserDTO.getRole().equals("ADMIN"))
+            role = Role.ADMIN;
+
 
         User user = new User(
                 createUserDTO.getEmail(), 
                 createUserDTO.getUsername(), 
                 encoder.encode(createUserDTO.getUsername()+"123"), 
-                createUserDTO.getRole()
+                role
             );
 
         user = userRepository.save(user);
-       return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getRole(), user.getGender());
+       return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
     
-    public RetrieveUserDTO update(UpdateUserDTO updateDTO, ObjectId id) {
+    public RetrieveUserDTO update(UpdateUserDTO updateUserDTO, ObjectId id) {
         User user = this.findById(id);
         User existsUser = null;
 
-        if(updateDTO.getEmail() != null && !updateDTO.getEmail().isBlank()) {
-            String email = updateDTO.getEmail(); 
+        if(updateUserDTO.getEmail() != null && !updateUserDTO.getEmail().isBlank()) {
+            String email = updateUserDTO.getEmail(); 
             
             try {
                 if(existsUser == null)
@@ -119,8 +125,8 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
             }
         }
 
-        if(updateDTO.getUsername() != null && !updateDTO.getUsername().isBlank()) {
-            String username = updateDTO.getUsername();
+        if(updateUserDTO.getUsername() != null && !updateUserDTO.getUsername().isBlank()) {
+            String username = updateUserDTO.getUsername();
 
             try {
                 if(existsUser == null)
@@ -133,13 +139,40 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
             }
         }
 
-        if (updateDTO.getFitstName() != null && !updateDTO.getFitstName().isBlank())
-            user.setFitstName(updateDTO.getFitstName());
+        if (updateUserDTO.getFitstName() != null && !updateUserDTO.getFitstName().isBlank())
+            user.setFitstName(updateUserDTO.getFitstName());
 
-         if (updateDTO.getLastName() != null && !updateDTO.getLastName().isBlank())
-            user.setLastName(updateDTO.getLastName());
-        
-        
-        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getRole(), user.getGender());
+        if (updateUserDTO.getLastName() != null && !updateUserDTO.getLastName().isBlank())
+            user.setLastName(updateUserDTO.getLastName());
+
+        if (updateUserDTO.getPhone() != null && !updateUserDTO.getPhone().isBlank())
+            user.setPhone(updateUserDTO.getPhone());
+
+        if (updateUserDTO.getGender() != null)
+            user.setGender(updateUserDTO.getGender());
+            
+        user = userRepository.save(user);        
+        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
+    }
+
+    public RetrieveUserDTO updatePassword(UpdatePasswordDTO updatePasswordDTO, ObjectId id) {
+        User user = this.findById(id);
+
+        if(updatePasswordDTO.getOldPassword() == null || updatePasswordDTO.getOldPassword().isBlank()) 
+            throw new BadRequestException("Password must not be empty");
+            
+        if(!encoder.matches(updatePasswordDTO.getOldPassword(), user.getPassword())) 
+            throw new BadCredentialsException("Access denied!");
+            
+        if(!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getConfirmPassword()))
+            throw new BadRequestException("Password confirmation must match new password");
+            
+        if(encoder.matches(updatePasswordDTO.getNewPassword(), user.getPassword()))
+            throw new BadRequestException("Password must not match old password");
+
+        user.setPassword(encoder.encode(updatePasswordDTO.getNewPassword()));
+
+        user = userRepository.save(user);        
+        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
 }

@@ -3,9 +3,13 @@ package dev.abdelrahman.movies.Models.User.DTOs;
 import dev.abdelrahman.movies.Models.User.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class UpdateUserDTO {
     @Size(min = 3, max = 20, message = "Firstname must be from 3 to 20 chars")
     private String fitstName;

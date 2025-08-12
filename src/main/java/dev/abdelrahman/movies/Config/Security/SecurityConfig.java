@@ -46,7 +46,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/movies/**").hasRole("ADMIN")
 
                 // Users
-                .requestMatchers("/api/v1/users").hasRole("ADMIN")
+                .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
+
+                //profile
+                .requestMatchers("/api/v1/profile").hasAnyRole("ADMIN", "USER")
                 
                 // Reviews
                 .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()

@@ -76,7 +76,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
             throw new AccessDeniedException("Access Denied!");
 
         review.setBody(updateReviewDTO.getReviewBody());
-        reviewRepository.save(review);
+        review = reviewRepository.save(review);
 
         return new RetrieveReviewDTO(review.getId(), review.getBody());
     }

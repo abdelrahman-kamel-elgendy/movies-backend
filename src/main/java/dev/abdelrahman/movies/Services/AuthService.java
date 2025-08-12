@@ -61,7 +61,7 @@ public class AuthService {
         user.setRole(Role.USER);
 
         userRepository.save(user);
-        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getRole(), user.getGender());
+        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
     
     public JwtResponseDTO authenticateUser(SigninDTO signinDTO) {
