@@ -1,5 +1,7 @@
 package dev.abdelrahman.movies.Controllers;
 
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +10,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.abdelrahman.movies.Config.Security.JwtUtils;
 import dev.abdelrahman.movies.Controllers.Exceptions.ApiResponse;
+import dev.abdelrahman.movies.Models.TokenBlacklist;
 import dev.abdelrahman.movies.Models.User.DTOs.JwtResponseDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SigninDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
+import dev.abdelrahman.movies.Repositories.TokenBlacklistRepository;
 import dev.abdelrahman.movies.Services.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -21,6 +27,28 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private TokenBlacklistRepository blacklistRepository;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<?>> logout(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+
+        if (headerAuth == null || !headerAuth.startsWith("Bearer "))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "No token found", null));
+
+        String token = headerAuth.substring(7);
+        Instant expiryDate = jwtUtils.getExpirationDateFromJwtToken(token).toInstant();
+
+        blacklistRepository.save(new TokenBlacklist(token, expiryDate));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Logged out successfully", null));
+        
+
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<JwtResponseDTO>> authenticateUser(@Valid @RequestBody SigninDTO signinDTO) {
