@@ -1,7 +1,5 @@
 package dev.abdelrahman.movies.Models.Review.DTOs;
 
-import org.bson.types.ObjectId;
-
 import jakarta.validation.constraints.NotBlank;
 
 import lombok.Getter;
