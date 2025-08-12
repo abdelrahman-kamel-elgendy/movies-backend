@@ -1,11 +1,7 @@
 package dev.abdelrahman.movies.Controllers;
 
 import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,16 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.abdelrahman.movies.Config.Security.JwtUtils;
 import dev.abdelrahman.movies.Controllers.Exceptions.ApiResponse;
-import dev.abdelrahman.movies.Models.Tokens.PasswordResetToken;
 import dev.abdelrahman.movies.Models.Tokens.TokenBlacklist;
-import dev.abdelrahman.movies.Models.User.User;
 import dev.abdelrahman.movies.Models.User.DTOs.JwtResponseDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SigninDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.SignupDTO;
-import dev.abdelrahman.movies.Repositories.PasswordResetTokenRepository;
 import dev.abdelrahman.movies.Repositories.TokenBlacklistRepository;
 import dev.abdelrahman.movies.Services.AuthService;
-import dev.abdelrahman.movies.Services.EmailService;
 import dev.abdelrahman.movies.Services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
