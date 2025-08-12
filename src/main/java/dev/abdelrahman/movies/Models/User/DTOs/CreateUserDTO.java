@@ -1,5 +1,6 @@
 package dev.abdelrahman.movies.Models.User.DTOs;
 
+import dev.abdelrahman.movies.Models.User.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,7 +25,7 @@ public class CreateUserDTO {
     private String email;
 
     @NotBlank(message = "Role must not be Blank")
-    private String role;
+    private Role role;
 
     private String gender;
 }

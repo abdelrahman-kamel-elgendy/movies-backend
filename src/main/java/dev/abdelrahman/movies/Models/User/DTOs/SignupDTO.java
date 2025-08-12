@@ -15,7 +15,7 @@ public class SignupDTO {
     @NotBlank(message = "Last name must not be Blank")
     private String lastName;
     
-    private String Phone;
+    private String phone;
     
     @NotBlank(message = "Username must not be Blank")
     @Size(min = 3, max = 20, message = "Username must be from 3 to 20 chars")

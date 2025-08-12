@@ -60,6 +60,18 @@ public class AuthService {
         user.setPassword(encoder.encode(signupDTO.getPassword()));
         user.setRole(Role.USER);
 
+        if(signupDTO.getFitstName() != null && !signupDTO.getFitstName().isEmpty())
+            user.setFitstName(signupDTO.getFitstName());
+
+        if(signupDTO.getLastName() != null && !signupDTO.getLastName().isEmpty())
+            user.setLastName(signupDTO.getLastName());
+
+        if(signupDTO.getGender() != null)
+                user.setGender(signupDTO.getGender());
+
+        if(signupDTO.getPhone() != null && !signupDTO.getPhone().isEmpty())
+            user.setPhone(signupDTO.getPhone());
+
         userRepository.save(user);
         return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
