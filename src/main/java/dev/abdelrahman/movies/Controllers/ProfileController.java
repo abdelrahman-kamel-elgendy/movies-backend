@@ -1,6 +1,10 @@
 package dev.abdelrahman.movies.Controllers;
 
+import java.net.http.HttpResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +31,11 @@ public class ProfileController {
     @GetMapping
     public  ResponseEntity<ApiResponse<?>> getProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByUsername(auth.getName());
 
+        if(auth.getName().equals("anonymousUser"))
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(false, "Unauthorized", null));
+
+        User user = userService.findUserByUsername(auth.getName());
         RetrieveUserDTO retrieveUserDTO = new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender()); 
         return  ResponseEntity.ok(new ApiResponse<>(true, "Record found", retrieveUserDTO));
     }
