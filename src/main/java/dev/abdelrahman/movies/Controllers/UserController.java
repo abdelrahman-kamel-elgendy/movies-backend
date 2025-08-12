@@ -12,6 +12,4 @@ import dev.abdelrahman.movies.Services.UserService;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController extends CrudController<UserService, User, RetrieveUserDTO, CreateUserDTO, UpdateUserDTO> {
-
 }
-

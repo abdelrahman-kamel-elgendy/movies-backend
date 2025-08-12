@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.User.User;
 import dev.abdelrahman.movies.Models.User.DTOs.CreateUserDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.RetrieveUserDTO;
+import dev.abdelrahman.movies.Models.User.DTOs.UpdatePasswordDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.UpdateUserDTO;
 import dev.abdelrahman.movies.Repositories.UserRepository;
 
@@ -35,7 +38,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
     public List<User> allValid() {
         return mongoTemplate.find(new Query(Criteria.where("isActive").is(true)), User.class);
     }
-
+    
     public User findById(ObjectId id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
