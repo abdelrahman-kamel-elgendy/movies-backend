@@ -44,7 +44,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
     }
 
     public User findUserByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findUserByEmail(email)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
         
         return user;
@@ -101,16 +101,6 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
     public RetrieveUserDTO update(UpdateUserDTO updateDTO, ObjectId id) {
         User user = this.findById(id);
         User existsUser = null;
-        
-        
-        if(updateDTO.getPassword()!= null && !updateDTO.getPassword().isBlank()) {
-            String password = updateDTO.getPassword();
-            
-            if(updateDTO.getPasswordConfirmation()!= null && !updateDTO.getPasswordConfirmation().isBlank() && updateDTO.getPasswordConfirmation().equals(password))
-                user.setPassword(password);
-            else 
-                throw new BadRequestException("Password confirmation does not match!");
-        }
 
         if(updateDTO.getEmail() != null && !updateDTO.getEmail().isBlank()) {
             String email = updateDTO.getEmail(); 

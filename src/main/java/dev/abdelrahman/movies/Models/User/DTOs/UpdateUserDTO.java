@@ -22,9 +22,5 @@ public class UpdateUserDTO {
     
     private String Phone;
     
-    private String password;
-    
-    private String passwordConfirmation;
-    
     private Gender gender;
 }

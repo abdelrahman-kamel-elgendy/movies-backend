@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/reviews").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/reviews").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/delete").hasAnyRole("ADMIN", "USER")
                 .requestMatchers("/api/v1/reviews/**").hasAnyRole("ADMIN")
 
                 // Swagger UI & API Docs

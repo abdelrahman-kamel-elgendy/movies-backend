@@ -7,6 +7,9 @@ import lombok.Setter;
 import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+
+import dev.abdelrahman.movies.Models.User.User;
 
 @Data
 @Setter
@@ -15,13 +18,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "reviews")
 public class Review {
-    public Review(String body, boolean isActive) {
-        this.body = body;
-        this.isActive = isActive;
-    }
-
     @Id
     private String id;
     private String body;
     private boolean isActive;
+
+    @DocumentReference
+    private User user;
+
+    public Review(String body, boolean isActive, User user) {
+        this.body = body;
+        this.isActive = isActive;
+        this.user = user;
+    }
 }

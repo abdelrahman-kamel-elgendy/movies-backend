@@ -12,10 +12,10 @@ public class CreateReviewDTO {
     private String reviewBody;
 
     @NotBlank(message = "Id must not be blank")
-    private ObjectId id;
+    private String id;
 
 
-    public CreateReviewDTO(String reviewBody, ObjectId id) {
+    public CreateReviewDTO(String reviewBody, String id) {
         this.reviewBody = reviewBody;
         this.id = id;
     }
