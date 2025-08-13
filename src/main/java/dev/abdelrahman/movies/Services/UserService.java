@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -27,6 +28,8 @@ import dev.abdelrahman.movies.Repositories.UserRepository;
 
 @Service
 public class UserService implements CrudService<User, RetrieveUserDTO, CreateUserDTO, UpdateUserDTO> {
+    @Value("${app.base-url}")
+    private String baseUrl;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -187,7 +190,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
 
         tokenRepository.save(new PasswordResetToken(email, token, expiry));
 
-        String resetLink = "http://localhost:8080/api/v1/auth/reset-password?token=" + token;
+        String resetLink = baseUrl + "/api/v1/auth/reset-password?token=" + token;
         emailService.sendEmail(email, "Password Reset Request", "Click here to reset your password: " + resetLink);
 
         return resetLink;
