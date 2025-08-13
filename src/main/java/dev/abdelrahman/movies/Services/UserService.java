@@ -183,7 +183,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
     }
 
     public String resetPasswordRequest(String email) {
-        this.findUserByEmail(email);
+        User user = this.findUserByEmail(email);
 
         String token = UUID.randomUUID().toString();
         Instant expiry = Instant.now().plusSeconds(15 * 60); // 15 mins
@@ -191,7 +191,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         tokenRepository.save(new PasswordResetToken(email, token, expiry));
 
         String resetLink = baseUrl + "/api/v1/auth/reset-password?token=" + token;
-        emailService.sendEmail(email, "Password Reset Request", "Click here to reset your password: " + resetLink);
+        emailService.sendPasswordResetEmail(email, user.getFitstName(), resetLink);
 
         return resetLink;
     }
