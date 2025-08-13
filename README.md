@@ -29,24 +29,6 @@ A RESTful API for managing movies, users, and reviews. Built with Spring Boot, M
 - Maven
 - MongoDB database
 
-### Environment Variables
-
-Copy `.env.example`(src/main/resources/.env.example) to `.env` and fill in your MongoDB credentials:
-
-```
-MONGO_DATABASE=
-MONGO_USER=
-MONGO_PASSWORD=
-MONGO_CLUSTER=
-```
-
-Set the following variables in your environment or `.env` file:
-
-- `SECRET_KEY` (JWT secret, base64 encoded)
-- `EXPIRATION_MS` (JWT expiration in ms)
-
-Edit `application.properties`(src/main/resources/application.properties) for mail and JWT settings.
-
 ### Build & Run
 
 ```sh
