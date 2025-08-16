@@ -90,7 +90,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
     }
 
     public Review active(ObjectId id) {
-         Review review = this.active(id);
+        Review review = this.findById(id);
             
         review.setActive(true);
         reviewRepository.save(review);
