@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class SigninDTO {
 
-    @NotBlank(message = "Usernamemust not be Blank")
+    @NotBlank(message = "Username must not be Blank")
     @Size(min = 3, max = 20, message = "Username must be from 3 to 20 chars")
     private String username;
     
