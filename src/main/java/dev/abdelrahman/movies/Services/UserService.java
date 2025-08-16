@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import dev.abdelrahman.movies.Controllers.Exceptions.BadRequestException;
 import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
 import dev.abdelrahman.movies.Models.Tokens.PasswordResetToken;
+import dev.abdelrahman.movies.Models.User.Role;
 import dev.abdelrahman.movies.Models.User.User;
 import dev.abdelrahman.movies.Models.User.DTOs.CreateUserDTO;
 import dev.abdelrahman.movies.Models.User.DTOs.RetrieveUserDTO;
@@ -95,21 +96,27 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
     }
 
     public RetrieveUserDTO create(CreateUserDTO createUserDTO) {
+        Role role = Role.USER;
+
         if(userRepository.existsByEmail(createUserDTO.getEmail()))
             throw new BadRequestException("Email alrady exists!");
 
         if(userRepository.existsByUsername(createUserDTO.getUsername()))
             throw new BadRequestException("Username alrady taken!");
 
+        if(createUserDTO.getRole().equalsIgnoreCase("ADMIN"))
+            role = Role.ADMIN;
 
-        User user = new User(
-                createUserDTO.getEmail(), 
-                createUserDTO.getUsername(), 
-                encoder.encode(createUserDTO.getUsername()+"123"), 
-                createUserDTO.getRole()
-            );
-
+        String email = createUserDTO.getEmail();
+        String username = createUserDTO.getUsername();
+        String password = createUserDTO.getUsername()+"123";
+        String firstName = createUserDTO.getFirstName();
+        User user = new User(email, username, encoder.encode(password), role);
+        user.setFitstName(firstName);
+        user.setLastName(createUserDTO.getLastName());
         user = userRepository.save(user);
+
+        emailService.sendWelcomeEmail(email, firstName, username, password);
        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
     

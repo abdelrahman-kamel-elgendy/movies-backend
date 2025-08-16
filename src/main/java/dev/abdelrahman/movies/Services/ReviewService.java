@@ -34,6 +34,13 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    private void checkReviewOwnership(Review review) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.findUserByUsername(currentUsername);
+
+        if (!review.getUser().getId().equals(currentUser.getId()))
+            throw new AccessDeniedException("Access Denied!");
+    }
 
     public List<Review> all() {
         return reviewRepository.findAll();
@@ -68,12 +75,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
 
     public RetrieveReviewDTO update(UpdateReviewDTO updateReviewDTO, ObjectId id) {
         Review review = this.findById(id);
-        
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userService.findUserByUsername(currentUsername);
-        
-        if (!review.getUser().getId().equals(currentUser.getId())) 
-            throw new AccessDeniedException("Access Denied!");
+        checkReviewOwnership(review);
 
         review.setBody(updateReviewDTO.getReviewBody());
         review = reviewRepository.save(review);
@@ -82,7 +84,8 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
     }
 
     public Review smootheDelete(ObjectId id) {
-         Review review = this.findById(id);
+        Review review = this.findById(id);
+        checkReviewOwnership(review);
             
         review.setActive(false);;
         reviewRepository.save(review);
@@ -98,7 +101,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
     }
 
     public Review delete(ObjectId id) {
-         Review review = this.delete(id);
+         Review review = this.findById(id);
             
         reviewRepository.deleteById(id);
         return review;

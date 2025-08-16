@@ -6,6 +6,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import dev.abdelrahman.movies.Models.User.User;
+
 @Service
 public class EmailService {
     @Value("${app.name}")
@@ -43,6 +45,17 @@ public class EmailService {
             "Password Reset Request",
             "We received a request to reset your password. Please click the link below to reset your password:\n" + resetLink +
             "\n\nIf you did not request this, please ignore this email. The link expires in 15 minutes."
+        );
+    }
+
+    public void sendWelcomeEmail(String userEmail, String name, String username, String password) {
+        sendStandardEmail(
+            userEmail,
+            name,
+            String.format("Welcome to %s!", this.appName),
+            String.format(
+                "Your account has been created successfully.\n\nYour credentials: \nUsername: %s\nPassword: %s\n\nThank you for joining %s!",
+                username, password, this.appName)
         );
     }
 }
