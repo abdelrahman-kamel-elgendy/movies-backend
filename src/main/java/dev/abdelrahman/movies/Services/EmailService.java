@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import dev.abdelrahman.movies.Models.User.User;
-
 @Service
 public class EmailService {
     @Value("${app.name}")
