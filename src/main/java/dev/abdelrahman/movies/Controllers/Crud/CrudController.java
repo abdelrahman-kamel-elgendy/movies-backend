@@ -4,7 +4,6 @@ import dev.abdelrahman.movies.Controllers.Exceptions.ApiResponse;
 import dev.abdelrahman.movies.Services.CrudService;
 import jakarta.validation.Valid;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ implements ICrudController<Entity, RetrieveDTO, CreateDTO, UpdateDTO> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> getById(@PathVariable ObjectId id) {
+    public ResponseEntity<ApiResponse<?>> getById(@PathVariable String id) {
         return  ResponseEntity.ok(new ApiResponse<>(true, "Record found", service.findById(id)));
     }
 
@@ -42,22 +41,22 @@ implements ICrudController<Entity, RetrieveDTO, CreateDTO, UpdateDTO> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> update(@PathVariable ObjectId id, @Valid @RequestBody UpdateDTO updateDTO) {
+    public ResponseEntity<ApiResponse<?>> update(@PathVariable String id, @Valid @RequestBody UpdateDTO updateDTO) {
         return ResponseEntity.ok((new ApiResponse<>(true, "Record updated", service.update(updateDTO, id))));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> delete(@PathVariable ObjectId id) {
+    public ResponseEntity<ApiResponse<?>> delete(@PathVariable String id) {
         return ResponseEntity.ok((new ApiResponse<>(true, "Record updated", service.delete(id))));
     }
 
     @PutMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse<?>> smootheDelete(@PathVariable ObjectId id) {
+    public ResponseEntity<ApiResponse<?>> smootheDelete(@PathVariable String id) {
         return ResponseEntity.ok((new ApiResponse<>(true, "Record deeleted", service.smootheDelete(id))));
     } 
 
     @PutMapping("/active/{id}")
-    public ResponseEntity<ApiResponse<?>> activeMovie(@PathVariable ObjectId id) {
+    public ResponseEntity<ApiResponse<?>> activeMovie(@PathVariable String id) {
         return ResponseEntity.ok((new ApiResponse<>(true, "Record activated", service.active(id))));
     } 
 

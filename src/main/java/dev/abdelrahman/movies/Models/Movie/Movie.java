@@ -27,5 +27,5 @@ public class Movie {
     private boolean isActive;
 
     @DocumentReference
-    private List<Review> reviewIds;
+    private List<Review> reviews;
 }

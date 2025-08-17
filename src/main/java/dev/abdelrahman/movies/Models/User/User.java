@@ -3,12 +3,13 @@ package dev.abdelrahman.movies.Models.User;
 import java.util.Collection;
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.Getter;
@@ -22,18 +23,23 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User implements UserDetails {
     @Id
-    private ObjectId id;
+    private String id;
     private String fitstName;
     private String lastName;
     private String username;
     private String email;
     private String Phone;
+    @JsonIgnore
     private String password;
     private Role role;
     private Gender gender;
+    @JsonIgnore
     private boolean logined;
+    @JsonIgnore
     private boolean enabled = true;
+    @JsonIgnore
     private boolean isActive = true;
+    @JsonIgnore
     private boolean isLocked = false;
 
     public User(String username, String email, String password, Role role) {

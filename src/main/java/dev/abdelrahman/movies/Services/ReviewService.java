@@ -12,7 +12,6 @@ import dev.abdelrahman.movies.Repositories.ReviewRepository;
 
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -50,7 +49,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
         return mongoTemplate.find(new Query(Criteria.where("isActive").is(true)), Review.class);
     }
 
-    public Review findById(ObjectId id) {
+    public Review findById(String id) {
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Review not found with id " + id));
 
@@ -58,7 +57,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
     }
 
     public RetrieveReviewDTO create(CreateReviewDTO createReviewDTO) {
-        Movie movie = movieService.findById(new ObjectId(createReviewDTO.getId()));
+        Movie movie = movieService.findById(createReviewDTO.getId());
 
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByUsername(currentUsername);
@@ -67,13 +66,13 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
 
         reviewRepository.insert(review);
         
-        movie.getReviewIds().add(review);
+        movie.getReviews().add(review);
         movieRepository.save(movie);
 
         return new RetrieveReviewDTO(review.getId(), review.getBody());
     }
 
-    public RetrieveReviewDTO update(UpdateReviewDTO updateReviewDTO, ObjectId id) {
+    public RetrieveReviewDTO update(UpdateReviewDTO updateReviewDTO, String id) {
         Review review = this.findById(id);
         checkReviewOwnership(review);
 
@@ -83,7 +82,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
         return new RetrieveReviewDTO(review.getId(), review.getBody());
     }
 
-    public Review smootheDelete(ObjectId id) {
+    public Review smootheDelete(String id) {
         Review review = this.findById(id);
         checkReviewOwnership(review);
             
@@ -92,7 +91,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
         return review;
     }
 
-    public Review active(ObjectId id) {
+    public Review active(String id) {
         Review review = this.findById(id);
             
         review.setActive(true);
@@ -100,7 +99,7 @@ public class ReviewService implements CrudService<Review, RetrieveReviewDTO, Cre
         return review;
     }
 
-    public Review delete(ObjectId id) {
+    public Review delete(String id) {
          Review review = this.findById(id);
             
         reviewRepository.deleteById(id);

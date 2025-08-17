@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -51,7 +50,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         return mongoTemplate.find(new Query(Criteria.where("isActive").is(true)), User.class);
     }
     
-    public User findById(ObjectId id) {
+    public User findById(String id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
         
@@ -72,7 +71,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         return user;
     }
     
-    public User smootheDelete(ObjectId id) {
+    public User smootheDelete(String id) {
         User user = this.findById(id);
 
         user.setActive(false);;
@@ -80,7 +79,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         return user;
     }
 
-    public User active(ObjectId id) {
+    public User active(String id) {
         User user = this.findById(id);
 
         user.setActive(true);
@@ -88,7 +87,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         return user;
     }
 
-    public User delete(ObjectId id) {
+    public User delete(String id) {
         User User = this.findById(id);
          
         userRepository.deleteById(id);
@@ -120,7 +119,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
     
-    public RetrieveUserDTO update(UpdateUserDTO updateUserDTO, ObjectId id) {
+    public RetrieveUserDTO update(UpdateUserDTO updateUserDTO, String id) {
         User user = this.findById(id);
         User existsUser = null;
 
@@ -168,7 +167,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
 
-    public RetrieveUserDTO updatePassword(UpdatePasswordDTO updatePasswordDTO, ObjectId id) {
+    public RetrieveUserDTO updatePassword(UpdatePasswordDTO updatePasswordDTO, String id) {
         User user = this.findById(id);
 
         if(updatePasswordDTO.getOldPassword() == null || updatePasswordDTO.getOldPassword().isBlank()) 

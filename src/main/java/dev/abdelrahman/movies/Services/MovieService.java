@@ -1,6 +1,5 @@
 package dev.abdelrahman.movies.Services;
 
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import dev.abdelrahman.movies.Controllers.Exceptions.ResourceNotFoundException;
@@ -33,14 +32,14 @@ public class MovieService implements CrudService<Movie, RetrieveMovieDTO, Create
         return mongoTemplate.find(new Query(Criteria.where("isActive").is(true)), Movie.class);
     }
 
-    public Movie findById(ObjectId id) {
+    public Movie findById(String id) {
          Movie movie = movieRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
 
         return movie;
     }
     
-    public Movie smootheDelete(ObjectId id) {
+    public Movie smootheDelete(String id) {
         Movie movie = this.findById(id);
             
         movie.setActive(false);;
@@ -48,7 +47,7 @@ public class MovieService implements CrudService<Movie, RetrieveMovieDTO, Create
         return movie;
     }
 
-    public Movie active(ObjectId id) {
+    public Movie active(String id) {
         Movie movie = this.findById(id);
 
         movie.setActive(true);
@@ -56,7 +55,7 @@ public class MovieService implements CrudService<Movie, RetrieveMovieDTO, Create
         return movie;
     }
 
-    public Movie delete(ObjectId id) {
+    public Movie delete(String id) {
         Movie movie = this.findById(id);
 
         movieRepository.deleteById(id);
@@ -76,7 +75,7 @@ public class MovieService implements CrudService<Movie, RetrieveMovieDTO, Create
         return new RetrieveMovieDTO(movie.getId(), movie.getTitle(), movie.getReleaseData(), movie.getTrailerLink(), movie.getPoster(), movie.getGenres(), movie.getBackdrops());
     }
 
-    public RetrieveMovieDTO update(UpdateMovieDTO updateMovieDTO, ObjectId id) {
+    public RetrieveMovieDTO update(UpdateMovieDTO updateMovieDTO, String id) {
         Movie movie = this.findById(id);
 
 
