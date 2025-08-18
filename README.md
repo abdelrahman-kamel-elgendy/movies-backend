@@ -75,8 +75,7 @@ ADMIN_LAST_NAME=Admin
 
 ### API Documentation
 
-Swagger UI is available at:  
-`https://movies-reviews-api.onrender.com/swagger-ui/index.html`
+Swagger UI is available at: https://movies-reviews-api.onrender.com/swagger-ui/index.html
 
 ## Main Endpoints
 
