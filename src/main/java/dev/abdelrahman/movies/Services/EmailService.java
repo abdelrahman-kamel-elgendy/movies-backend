@@ -45,7 +45,17 @@ public class EmailService {
         );
     }
 
-    public void sendWelcomeEmail(String userEmail, String name, String username, String password) {
+    public void sendWelcomeEmail(String userEmail, String name) {
+        sendStandardEmail(
+            userEmail,
+            name,
+            String.format("Welcome to %s!", this.appName),
+            String.format(
+                "Your account has been created successfully.\n\nThank you for joining %s!", this.appName)
+        );
+    }
+    
+    public void sendWelcomeEmailForSystemCreatedUser(String userEmail, String name, String username, String password) {
         sendStandardEmail(
             userEmail,
             name,

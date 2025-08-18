@@ -35,6 +35,9 @@ public class AuthService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    EmailService emailService;
+
 
     public boolean existsByUsername(String username) { 
         return userRepository.existsByUsername(username);
@@ -73,6 +76,7 @@ public class AuthService {
             user.setPhone(signupDTO.getPhone());
 
         userRepository.save(user);
+        emailService.sendWelcomeEmail(user.getEmail(), user.getFitstName());
         return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
     

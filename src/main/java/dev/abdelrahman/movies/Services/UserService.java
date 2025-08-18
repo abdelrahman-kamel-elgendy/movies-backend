@@ -115,7 +115,7 @@ public class UserService implements CrudService<User, RetrieveUserDTO, CreateUse
         user.setLastName(createUserDTO.getLastName());
         user = userRepository.save(user);
 
-        emailService.sendWelcomeEmail(email, firstName, username, password);
+        emailService.sendWelcomeEmailForSystemCreatedUser(email, firstName, username, password);
        return new RetrieveUserDTO(user.getFitstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getPhone(), user.getGender());
     }
     
