@@ -1,7 +1,6 @@
 # Movie reviews APIs
 
-MovieAPI is a Spring Boot backend application for managing movies, users, authentication, and administration for a movie website.  
-It supports user registration, login (with username or email), password reset, JWT authentication, MongoDB integration, and email notifications
+MovieAPI is a Spring Boot backend application for managing movies, users, authentication, and administration for a movie website. It supports user registration, login (with username or email), password reset, JWT authentication, MongoDB integration, and email notifications
 
 
 ## Features
