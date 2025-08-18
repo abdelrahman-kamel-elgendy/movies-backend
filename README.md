@@ -1,9 +1,8 @@
 # Movie reviews APIs
 
 MovieAPI is a Spring Boot backend application for managing movies, users, authentication, and administration for a movie website.  
-It supports user registration, login (with username or email), password reset, JWT authentication, MongoDB integration, and email notifications.
+It supports user registration, login (with username or email), password reset, JWT authentication, MongoDB integration, and email notifications
 
-Live URL: https://movies-reviews-api.onrender.com/swagger-ui/index.html
 
 ## Features
 
@@ -77,7 +76,7 @@ ADMIN_LAST_NAME=Admin
 ### API Documentation
 
 Swagger UI is available at:  
-`http://localhost:8080/swagger-ui/index.html`
+`https://movies-reviews-api.onrender.com/swagger-ui/index.html`
 
 ## Main Endpoints
 
